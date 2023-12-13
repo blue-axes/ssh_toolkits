@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"github.com/creack/pty"
 	sshd "github.com/gliderlabs/ssh"
-	"golang.org/x/term"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"io"
-	"os"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -54,15 +52,10 @@ func (h *SSH) Handle(sess sshd.Session) {
 		}
 		defer ptmx.Close()
 		handleResize(ptmx)
-		oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
-		if err != nil {
-			panic(err)
-		}
-		defer term.Restore(int(os.Stdin.Fd()), oldState)
 		go func() {
-			_, _ = io.Copy(ptmx, os.Stdin)
+			_, _ = io.Copy(ptmx, sess)
 		}()
-		_, _ = io.Copy(os.Stdin, ptmx)
+		_, _ = io.Copy(sess, ptmx)
 		return
 	}
 
