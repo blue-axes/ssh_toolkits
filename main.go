@@ -20,8 +20,9 @@ func main() {
 	flag.UintVar(&port, "port", 4400, "the listen port")
 	flag.StringVar(&username, "username", "tools", "the ssh auth username")
 	flag.StringVar(&password, "password", "tools", "the ssh auth password")
+	flag.Parse()
 
-	fmt.Println("listen at *:4400")
+	fmt.Printf("listen at *:%d\n", port)
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		panic(err)
@@ -52,7 +53,6 @@ func main() {
 		},
 		LocalPortForwardingCallback:   nil,
 		ReversePortForwardingCallback: nil,
-		ServerConfigCallback:          nil,
 		SessionRequestCallback:        nil,
 		ConnectionFailedCallback:      nil,
 		IdleTimeout:                   time.Hour * 12,

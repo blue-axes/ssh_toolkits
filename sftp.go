@@ -18,6 +18,12 @@ func NewSFTPServer() *SFTP {
 }
 
 func (h *SFTP) Handle(sess sshd.Session) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
 	h.sess = sess
 	defer h.Close()
 	defer fmt.Println("end sftp.........")
